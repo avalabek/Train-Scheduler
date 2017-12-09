@@ -73,7 +73,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   //use moment.js and/or math to calculate the ones below
   var nextArrival;
   var minutesAway;
- var currentTime = moment().format(HHmm);
+ var currentTime;
 
   // Train Info
   console.log(trainName);
@@ -84,13 +84,15 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   console.log(minutesAway);
 
   // Prettify the first train time
-  var firstTrainPretty = moment.unix(firstTrain).format("HHmm");
+  var firstTrainPretty = moment.unix(firstTrain).format("HH:mm");
 
   // Calculate the nextArrival using hardcore math
   // To calculate the nextArrival--I don't really want the difference, I 
   // want to increment from first train til I reach current time then go one more
-  var nextArrival = moment().diff(moment.unix(firstTrain, "X"), "HHmm");
-  console.log(nextArrival);
+  var nextArrival = moment().diff(moment.unix(firstTrain, "X"), "HH:mm");
+  console.log(nextArrival);//NAN
+  var nextTrain = nextArrival + firstTrain;
+  console.log(nextTrain);
 //the math calculations aren't right! how to figure out
   // Add frequency to thatTHIS IS ALL WRONG
   
