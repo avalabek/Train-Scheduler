@@ -5,7 +5,7 @@
 //    Then use moment.js formatting to set difference in months.
 // 5. Calculate Total billed
 
-// 1. Initialize Firebase
+// Initialize Firebase
  var config = {
     apiKey: "AIzaSyAvd-4kBlWP3MjjeWRZrY0BNufIlsyCiDk",
     authDomain: "train-scheduler-900dd.firebaseapp.com",
@@ -73,7 +73,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   //use moment.js and/or math to calculate the ones below
   var nextArrival;
   var minutesAway;
- var currentTime; //calcuated by moment.js
+ var currentTime = moment().format(HHmm);
 
   // Train Info
   console.log(trainName);
@@ -83,7 +83,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   console.log(nextArrival);
   console.log(minutesAway);
 
-  // Prettify the employee start
+  // Prettify the first train time
   var firstTrainPretty = moment.unix(firstTrain).format("HHmm");
 
   // Calculate the nextArrival using hardcore math
