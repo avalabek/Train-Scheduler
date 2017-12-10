@@ -19,7 +19,7 @@
 
 var database = firebase.database();
 
-// button for adding trains
+// add trains on submit button
 $("#add-train-btn").on("click", function(event) {
   event.preventDefault();
 
@@ -29,34 +29,34 @@ $("#add-train-btn").on("click", function(event) {
   var firstTrain = moment($("#first-train-input").val().trim(), "HHmm").format("X");
   var frequency = $("#frequency-input").val().trim();
  
-  // Creates local "temporary" object for holding train data
+  // local object to put train times in
   var newTrain = {
     name: trainName,
     place: destination,
     start: firstTrain,
     frequency: frequency,
-   //I think these below are not needed here as this is only for input data
-    // arrives: nextArrival,
-    // minutes: minutesAway
-  };
+   
+  };//semicolon or no?
 
-  // Uploads employee data to the database
+  // send train data to database
   database.ref().push(newTrain);
 
-  // Logs everything to console
+  
   console.log(newTrain.name);
   console.log(newTrain.place);
   console.log(newTrain.start);
   console.log(newTrain.frequency);
 
-  // Alert 
+  
   alert("Train successfully added.");
 
-  // Clears all of the text-boxes
+  // Clear all text boxes
   $("#train-name-input").val("");
   $("#destination-input").val("");
   $("#first-train-input").val("");
   $("#frequency-input").val("");
+//not sure why false here or return but not broken
+  return false;
 });
 
 // Firebase event for adding train to the database and a row in the html when a user adds an entry
@@ -64,7 +64,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
   console.log(childSnapshot.val());
 
-  // Store everything into a variable.
+  
   var trainName = childSnapshot.val().name;
   var destination = childSnapshot.val().place;
   var firstTrain = childSnapshot.val().start;
@@ -80,36 +80,46 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   console.log(destination);
   console.log(firstTrain);
   console.log(frequency);
-  console.log(nextArrival);
-  console.log(minutesAway);
+  
+
+//convert first time(push back one year to make it prior to now)
+var firstTrainConverted = moment(firstTrain, "HH:mm").subtract(1,"years");
+console.log(firstTrainConverted);
 
   // Prettify the first train time
-  var firstTrainPretty = moment.unix(firstTrain).format("HH:mm");
+  // var firstTrainPretty = moment.unix(firstTrain).format("HH:mm");
+
+  var currentTime = moment();
+  console.log (currentTime);
+  var difference = moment().diff(moment(firstTrainConverted), "minutes");
+  console.log (difference);
+
+  var remainder = difference % frequency;
+  console.log (remainder);
+
+  var minutesAway = frequency - remainder; 
+  console.log("Minutes away: "+ minutesAway);
+
+  var nextTrain = moment().add(minutesAway, "minutes");
+  var nextTrainConverted = moment(nextTrain).format("HH:mm");
 
   // Calculate the nextArrival using hardcore math
   // To calculate the nextArrival--I don't really want the difference, I 
   // want to increment from first train til I reach current time then go one more
-  var nextArrival = moment().diff(moment.unix(firstTrain, "X"), "HH:mm");
-  console.log(nextArrival);//NAN
-  var nextTrain = nextArrival + firstTrain;
-  console.log(nextTrain);
+  // var nextArrival = moment().diff(moment.unix(firstTrain, "X"), "HH:mm");
+  // console.log(nextArrival);//NAN
+  // var nextTrain = nextArrival + firstTrain;
+  // console.log(nextTrain);
 //the math calculations aren't right! how to figure out
   // Add frequency to thatTHIS IS ALL WRONG
   
   var addFrequency  = firstTrain + frequency// <== current time then add 1 increment of freuqency ;
   console.log(addFrequency);
 
-var minutesAway = currentTime - nextArrival
+//var minutesAway = currentTime - nextArrival
 
   // Add each train's data into the table
   $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
-  firstTrainPretty + "</td><td>" + frequency + "</td><td>" + nextArrival + "</td><td>" + minutesAway + "</td></tr>");
+  frequency + "</td><td>" + nextTrainConverted + "</td><td>" + minutesAway +  "</td></tr>");
 });
 
-// Example Time Math
-// -----------------------------------------------------------------------------
-// Assume Employee start date of January 1, 2015
-// Assume current date is March 1, 2016
-
-// We know that this is 15 months.
-// Now we will create code in moment.js to confirm that any attempt we use mets this test case
