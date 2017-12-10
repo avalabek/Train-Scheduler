@@ -73,7 +73,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   //use moment.js and/or math to calculate the ones below
   var nextArrival;
   var minutesAway;
- var currentTime;
+  var currentTime;
 
   // Train Info
   console.log(trainName);
@@ -103,20 +103,11 @@ console.log(firstTrainConverted);
   var nextTrain = moment().add(minutesAway, "minutes");
   var nextTrainConverted = moment(nextTrain).format("HH:mm");
 
-  // Calculate the nextArrival using hardcore math
-  // To calculate the nextArrival--I don't really want the difference, I 
-  // want to increment from first train til I reach current time then go one more
-  // var nextArrival = moment().diff(moment.unix(firstTrain, "X"), "HH:mm");
-  // console.log(nextArrival);//NAN
-  // var nextTrain = nextArrival + firstTrain;
-  // console.log(nextTrain);
-//the math calculations aren't right! how to figure out
-  // Add frequency to thatTHIS IS ALL WRONG
+  
   
   var addFrequency  = firstTrain + frequency// <== current time then add 1 increment of freuqency ;
   console.log(addFrequency);
 
-//var minutesAway = currentTime - nextArrival
 
   // Add each train's data into the table
   $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
